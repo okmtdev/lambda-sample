@@ -19,7 +19,7 @@ override.tf.json
 terraform.rc
 
 # Golang
-.exe
+*.exe
 *.exe~
 *.dll
 *.so

@@ -27,3 +27,4 @@ terraform.rc
 *.test
 *.out
 go.work
+/app/main

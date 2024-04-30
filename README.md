@@ -31,7 +31,7 @@ $ go version
 go version go1.22.2 darwin/arm64
 ```
 
-プロジェクト初期化
+Golang プロジェクト初期化
 
 ```
 $ go mod init github.com/okmtdev/lambda-sample
@@ -48,3 +48,8 @@ $ go mod tidy
 [Go+Lambda+Docker のローカル環境を構築する](https://zenn.dev/ryohei_takagi/articles/f4d63ae991ee9c)
 
 dynamodb-admin を用いるとローカル環境で DB 内のデータを GUI で確認できる
+
+```
+$ docker compose build
+$ docker compose run --rm go-local go build -o ./app/main ./app/main.go
+```

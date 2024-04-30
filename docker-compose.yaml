@@ -2,8 +2,7 @@ version: "3.8"
 
 networks:
   dynamodb-link:
-    external:
-      name: docker.internal
+    name: docker.internal
 
 services:
   lambda:
@@ -26,7 +25,7 @@ services:
     working_dir: /workspace
     volumes:
       - $PWD:/workspace/
-    command: go build -o ./app ./app/main.go
+    command: go build -o ./app/main ./app/main.go && chmod +x ./app/main
 
   dynamodb:
     image: amazon/dynamodb-local:latest

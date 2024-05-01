@@ -50,8 +50,15 @@ $ go mod tidy
 dynamodb-admin を用いるとローカル環境で DB 内のデータを GUI で確認できる
 
 ```
-$ docker compose build
-$ docker compose run --rm go-local go build -o ./app/main ./app/main.go
+$ docker compose up
+
+$ curl -i -X POST http://localhost:8080/2015-03-31/functions/function/invocations -d '{}'
+HTTP/1.1 200 OK
+Date: Wed, 01 May 2024 16:19:52 GMT
+Content-Length: 4
+Content-Type: text/plain; charset=utf-8
+
+null
 ```
 
 ## Architecture figure from Terraform code

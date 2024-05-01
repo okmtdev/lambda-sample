@@ -15,7 +15,7 @@ services:
     ports:
       - 8080:8080
     volumes:
-      - $PWD/app:/main
+      - $PWD/app:/app
 
   go-local:
     build:

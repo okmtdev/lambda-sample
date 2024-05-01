@@ -53,3 +53,7 @@ dynamodb-admin を用いるとローカル環境で DB 内のデータを GUI �
 $ docker compose build
 $ docker compose run --rm go-local go build -o ./app/main ./app/main.go
 ```
+
+## Architecture figure from Terraform code
+
+https://blog.mmmcorp.co.jp/2023/07/26/generating-architecture-diagram-from-terraform-code/

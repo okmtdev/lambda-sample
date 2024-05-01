@@ -4,4 +4,4 @@ COPY ./docker/lambda/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["/main"]
+CMD ["/app/main"]

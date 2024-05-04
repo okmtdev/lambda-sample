@@ -12,10 +12,16 @@ services:
     container_name: lambda
     depends_on:
       - go-local
+    networks:
+      - dynamodb-link
     ports:
       - 8080:8080
     volumes:
       - $PWD/app:/app
+    environment:
+      - AWS_ACCESS_KEY_ID=dummy
+      - AWS_SECRET_ACCESS_KEY=dummy
+      - AWS_DEFAULT_REGION=us-west-2
 
   go-local:
     build:

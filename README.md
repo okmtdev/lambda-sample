@@ -64,3 +64,56 @@ null
 ## Architecture figure from Terraform code
 
 https://blog.mmmcorp.co.jp/2023/07/26/generating-architecture-diagram-from-terraform-code/
+
+## DynamoDB Docker
+
+DynamoDB Admin を通じてローカルの DynamoDB を確認してみる
+
+`http://localhost:8001`
+
+![dynamodb-admin-0](./images/dynamodb_admin_0.png)
+
+ローカルで`docker compose up`をした後に`init.sh`を実行
+
+```
+./docker/dynamodb/init.sh
+{
+    "TableDescription": {
+        "AttributeDefinitions": [
+            {
+                "AttributeName": "Id",
+                "AttributeType": "S"
+            }
+        ],
+        "TableName": "SampleTable",
+        "KeySchema": [
+            {
+                "AttributeName": "Id",
+                "KeyType": "HASH"
+            }
+        ],
+        "TableStatus": "ACTIVE",
+        "CreationDateTime": "2024-05-04T20:22:51.466000+09:00",
+        "ProvisionedThroughput": {
+            "LastIncreaseDateTime": "1970-01-01T09:00:00+09:00",
+            "LastDecreaseDateTime": "1970-01-01T09:00:00+09:00",
+            "NumberOfDecreasesToday": 0,
+            "ReadCapacityUnits": 1,
+            "WriteCapacityUnits": 1
+        },
+        "TableSizeBytes": 0,
+        "ItemCount": 0,
+        "TableArn": "arn:aws:dynamodb:ddblocal:000000000000:table/SampleTable",
+        "DeletionProtectionEnabled": false
+    }
+}
+Sample table and data created successfully.
+```
+
+`http://localhost:8001`
+
+![dynamodb-admin-1](./images/dynamodb_admin_1.png)
+
+SampleTable をクリックすると、データが入っているはず
+
+![dynamodb-admin-2](./images/dynamodb_admin_2.png)

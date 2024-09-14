@@ -1,0 +1,47 @@
+name: pipeline for lambda-sample terraform
+
+on:
+  workflow_dispatch:
+    inputs:
+      terraform:
+        type: boolean
+        default: true
+        description: 2.terraform
+  push:
+    paths:
+      - terraform/main/*
+
+env:
+  TF_VERSION: 1.6.3
+  AWS_REGION: ap-northeast-1
+
+jobs:
+  terraform:
+    name: terraform
+    runs-on: ubuntu-22.04
+    timeout-minutes: 180
+    defaults:
+      run:
+        working-directory: terraform/main
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v3
+      - uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+      - uses: aws-actions/configure-aws-credentials@master
+        with:
+          role-to-assume: ${{ secrets.AWS_IAM_GITHUBACTIONS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+      - name: terraform setup
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+      - name: Terraform init
+        run: terraform init
+      - name: Terraform plan
+        run: terraform plan -no-color
+      - name: Terraform apply
+        run: terraform apply -auto-approve -no-color

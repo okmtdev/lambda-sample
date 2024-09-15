@@ -18,6 +18,10 @@ on:
     paths:
       - terraform/main/*
 
+env:
+  TF_VERSION: 1.6.3
+  AWS_REGION: ap-northeast-1
+
 jobs:
   plan:
     name: Plan
@@ -29,7 +33,7 @@ jobs:
         ]
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Check diff
         id: diff
@@ -41,17 +45,16 @@ jobs:
 
       - name: Configure aws credentials
         if: steps.diff.outputs.diff
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@master
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-northeast-1
+          role-to-assume: ${{ secrets.AWS_IAM_GITHUBACTIONS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Setup terraform
         if: steps.diff.outputs.diff
         uses: hashicorp/setup-terraform@v1.2.1
         with:
-          terraform_version: 0.13.2
+          terraform_version: ${{ env.TF_VERSION }}
 
       - name: Check format
         id: fmt
@@ -101,7 +104,7 @@ jobs:
 
             </details>`;
 
-            github.issues.createComment({
+            github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,

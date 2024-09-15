@@ -9,5 +9,12 @@ terraform {
 }
 
 provider "aws" {
-  region = "ap-northeast-1"
+  region = var.aws_region
+  default_tags {
+    tags = {
+      service   = var.service_name
+      owner     = "okmtdev"
+      terraform = "true"
+    }
+  }
 }

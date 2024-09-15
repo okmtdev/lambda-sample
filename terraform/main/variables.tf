@@ -4,8 +4,6 @@ variable "service_name" {
   description = "Service name"
 }
 
-
-
 variable "aws_region" {
   type        = string
   default     = "ap-northeast-1"

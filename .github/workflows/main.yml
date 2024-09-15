@@ -26,11 +26,15 @@ jobs:
   plan:
     name: Plan
     runs-on: ubuntu-latest
+    timeout-minutes: 180
     strategy:
       matrix:
         dir: [
           terraform/main
         ]
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@v3

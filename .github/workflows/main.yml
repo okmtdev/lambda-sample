@@ -63,7 +63,7 @@ jobs:
           script: |
             const output = `## Terraform
             <details><summary>🖌Show Plan</summary>
-            \`${{ steps.plan.outputs.stdout }}\`
+            \`\`\`terraform\n${{ steps.show.outputs.stdout }}\`\`\`
             </details>`;
             github.rest.issues.createComment({
               issue_number: context.issue.number,

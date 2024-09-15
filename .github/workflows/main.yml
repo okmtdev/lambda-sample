@@ -58,9 +58,10 @@ jobs:
         with:
           github-token: ${{ secrets.OKMTDEV_GITHUB_TOKEN }}
           script: |
-            const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outputs.stdout }}\`
-            #### Terraform Initialization ⚙️\`${{ steps.init.outputs.stdout }}\`
-            #### Terraform Plan 📖\`${{ steps.plan.outputs.stdout }}\``;
+            const output = `## \`${{ matrix.dir }}\`
+            <details><summary>🖌Show Plan</summary>
+            \`\`\`terraform\n${{ steps.plan.outputs.stdout }}\`\`\`
+            </details>`;
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,

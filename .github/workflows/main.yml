@@ -23,19 +23,12 @@ env:
   AWS_REGION: ap-northeast-1
 
 jobs:
-  terraform:
-    name: terraform
-    runs-on: ubuntu-22.04
-    timeout-minutes: 180
-    strategy:
-      matrix:
-        directory: ['terraform/main']
-    defaults:
-      run:
-        working-directory: ${{ matrix.directory }}
+  plan:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
     permissions:
-      id-token: write
-      contents: read
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v3

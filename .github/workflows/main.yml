@@ -37,42 +37,16 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - uses: actions/checkout@v3
-      - uses: aws-actions/configure-aws-credentials@master
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
         with:
-          role-to-assume: ${{ secrets.AWS_IAM_GITHUBACTIONS_ROLE_ARN }}
-          aws-region: ${{ env.AWS_REGION }}
-      - name: terraform setup
-        uses: hashicorp/setup-terraform@v3
+          terraform_version: 1.9.4
+      - uses: reproio/terraform-j2md@master
         with:
-          terraform_version: ${{ env.TF_VERSION }}
-      - name: Terraform Format
-        id: fmt
-        run: terraform fmt -check
-      - name: Terraform Init
-        run: terraform init
-        working-directory: ${{ matrix.dir }}
-      - name: Terraform plan
-        id: plan
-        run: terraform plan -no-color
-        working-directory: ${{ matrix.dir }}
-        continue-on-error: true
-      - name: Comment on PR
-        uses: actions/github-script@v7
-        with:
-          github-token: ${{ secrets.OKMTDEV_GITHUB_TOKEN }}
-          script: |
-            const output = `## Terraform
-            <details><summary>🖌Show Plan</summary>
-            \`\`\`${{ steps.plan.outputs.stdout }}\`\`\`
-            </details>`;
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `## Terraform checks in directory '${{ matrix.directory }}'\n` + output
-            })
-
-      - name: Terraform apply
-        if: ${{ github.event_name == 'push'}}
-        run: terraform apply -auto-approve -no-color
+          version: v0.0.9
+      - run: terraform init
+      - run: terraform plan -out=plan.tfplan
+      - run: terraform show -json plan.tfplan | terraform-j2md > plan.md
+      - run: |
+          gh pr comment ${{ github.event.number }} -F plan.md --edit-last \
+          || gh pr comment ${{ github.event.number }} -F plan.md

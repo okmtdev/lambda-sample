@@ -27,9 +27,12 @@ jobs:
     name: terraform
     runs-on: ubuntu-22.04
     timeout-minutes: 180
+    strategy:
+      matrix:
+        directory: ['terraform/main']
     defaults:
       run:
-        working-directory: terraform/main
+        working-directory: ${{ matrix.directory }}
     permissions:
       id-token: write
       contents: read
@@ -68,7 +71,6 @@ jobs:
               repo: context.repo.repo,
               body: `## Terraform checks in directory '${{ matrix.directory }}'\n` + output
             })
-
 
       - name: Terraform apply
         if: ${{ github.event_name == 'push'}}

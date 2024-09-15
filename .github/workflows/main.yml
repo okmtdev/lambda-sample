@@ -25,6 +25,13 @@ env:
 jobs:
   plan:
     runs-on: ubuntu-latest
+    timeout-minutes: 180
+    strategy:
+      matrix:
+        directory: ['terraform/main']
+    defaults:
+      run:
+        working-directory: ${{ matrix.directory }}
     env:
       GH_TOKEN: ${{ github.token }}
     permissions:

@@ -2,58 +2,42 @@ package main
 
 import (
 	"context"
-	"fmt"
-	"log"
-
+	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/dynamodb"
-	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
+	echoadapter "github.com/awslabs/aws-lambda-go-api-proxy/echo"
+	"os"
+	"github.com/labstack/echo/v4"
+	"log"
+	"net/http"
 )
 
-type Item struct {
-	Id   string
-	Name string
+var echoLambda *echoadapter.EchoLambda
+
+
+func lambdaHandler(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	log.Println("This is lambdaHandler")
+	e := echo.New()
+	e.GET("/", hello)
+	echoLambda = echoadapter.New(e)
+
+	return echoLambda.ProxyWithContext(ctx, req)
 }
 
-func Handler(ctx context.Context) error {
-	// セッションを作成
-	sess := session.Must(session.NewSession(&aws.Config{
-		Endpoint:    aws.String("http://dynamodb:8000"),
-		Region:      aws.String("us-west-2"),
-		Credentials: aws.AnonymousCredentials,
-	}))
+func localHandler() {
+	log.Println("This is localHandler")
+	e := echo.New()
+	e.GET("/", hello)
+	e.Logger.Fatal(e.Start(":1323"))
+}
 
-	// DynamoDBクライアントを作成
-	svc := dynamodb.New(sess)
-
-	// 書き込むアイテムを作成
-	item := Item{
-		Id:   "2",
-		Name: "Another Sample Data",
-	}
-
-	// アイテムをマップに変換
-	av, err := dynamodbattribute.MarshalMap(item)
-	if err != nil {
-		log.Fatalf("Got error marshalling new movie item: %s", err)
-	}
-
-	input := &dynamodb.PutItemInput{
-		Item:      av,
-		TableName: aws.String("SampleTable"),
-	}
-
-	_, err = svc.PutItem(input)
-	if err != nil {
-		log.Fatalf("Got error calling PutItem: %s", err)
-	}
-
-	fmt.Println("Successfully added 'Another Sample Data' to SampleTable")
-	return nil
+func hello(c echo.Context) error {
+	return c.String(http.StatusOK, "Hello, World!")
 }
 
 func main() {
-	lambda.Start(Handler)
+	if os.Getenv("ENV") == "local" {
+		localHandler()
+		return
+	}
+	lambda.Start(lambdaHandler)
 }

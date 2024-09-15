@@ -5,13 +5,14 @@ networks:
     name: docker.internal
 
 services:
-  lambda:
+  go-local-lambda:
     build:
       context: .
       dockerfile: ./docker/lambda/Dockerfile
-    container_name: lambda
+    container_name: go-local-lambda
     depends_on:
       - go-local
+      - go-local-dynamodb
     networks:
       - dynamodb-link
     ports:
@@ -28,14 +29,15 @@ services:
       context: .
       dockerfile: ./docker/go-local/Dockerfile
     container_name: go-local
-    working_dir: /workspace
-    volumes:
-      - $PWD:/workspace/
-    command: go build -o ./app/main ./app/main.go && chmod +x ./app/main
+    ports:
+      - 1323:1323
+    env_file:
+      - .env
+    command: /app/main
 
-  dynamodb:
+  go-local-dynamodb:
     image: amazon/dynamodb-local:latest
-    container_name: dynamodb
+    container_name: go-local-dynamodb
     user: root
     command: -jar DynamoDBLocal.jar -sharedDb -dbPath /data
     networks:
@@ -46,14 +48,14 @@ services:
       - 8000:8000
     tty: true
 
-  dynamodb-admin:
+  go-local-dynamodb-admin:
     image: aaronshaf/dynamodb-admin:latest
-    container_name: dynamodb-admin
+    container_name: go-local-dynamodb-admin
     environment:
-      - DYNAMO_ENDPOINT=dynamodb:8000
+      - DYNAMO_ENDPOINT=go-local-dynamodb:8000
     networks:
       - dynamodb-link
     ports:
       - 8001:8001
     depends_on:
-      - dynamodb
+      - go-local-dynamodb

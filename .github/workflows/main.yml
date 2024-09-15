@@ -49,11 +49,12 @@ jobs:
       - name: Terraform Format
         id: fmt
         run: terraform fmt -check
+      - name: Terraform Init
+        run: terraform init
+        working-directory: ${{ matrix.dir }}
       - name: Terraform plan
         id: plan
-        run: |
-          terraform init
-          terraform plan -no-color
+        run: terraform plan -no-color
         working-directory: ${{ matrix.dir }}
         continue-on-error: true
       - name: Comment on PR
@@ -63,7 +64,7 @@ jobs:
           script: |
             const output = `## Terraform
             <details><summary>🖌Show Plan</summary>
-            \`\`\`terraform\n${{ steps.plan.outputs.stdout }}\`\`\`
+            \`\`\`${{ steps.plan.outputs.stdout }}\`\`\`
             </details>`;
             github.rest.issues.createComment({
               issue_number: context.issue.number,

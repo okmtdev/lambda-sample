@@ -33,7 +33,7 @@ jobs:
       run:
         working-directory: ${{ matrix.directory }}
     env:
-      GH_TOKEN: ${{ github.token }}
+      GH_TOKEN: ${{ OKMTDEV_GITHUB_TOKEN }}
     permissions:
       pull-requests: write
     steps:

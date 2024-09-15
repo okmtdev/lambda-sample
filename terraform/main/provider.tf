@@ -2,7 +2,7 @@ terraform {
   required_version = ">= 1.6.3"
   backend "s3" {
     bucket  = "happy-wedding-tfstate"
-    region  = var.aws_region
+    region  = "ap-northeast-1"
     key     = "terraform.tfstate"
     encrypt = true
   }

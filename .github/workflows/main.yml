@@ -96,7 +96,7 @@ jobs:
         env:
           PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.OKMTDEV_GITHUB_TOKEN }}
           script: |
             const output = `## \`${{ matrix.dir }}\`
             #### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
@@ -114,3 +114,7 @@ jobs:
               repo: context.repo.repo,
               body: output
             })
+
+      - name: Terraform apply
+        if: ${{ github.event_name == 'push'}}
+        run: terraform apply -auto-approve -no-color

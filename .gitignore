@@ -28,3 +28,6 @@ terraform.rc
 *.out
 go.work
 /app/main
+
+# DynamoDB local
+dynamodb_data

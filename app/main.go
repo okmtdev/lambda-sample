@@ -40,7 +40,6 @@ func Handler(ctx context.Context) error {
 		log.Fatalf("Got error marshalling new movie item: %s", err)
 	}
 
-	// アイテムをDynamoDBに書き込む
 	input := &dynamodb.PutItemInput{
 		Item:      av,
 		TableName: aws.String("SampleTable"),

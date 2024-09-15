@@ -58,15 +58,15 @@ jobs:
         with:
           github-token: ${{ secrets.OKMTDEV_GITHUB_TOKEN }}
           script: |
-            const output = `## \`${{ matrix.dir }}\`
+            const output = `## Terraform
             <details><summary>🖌Show Plan</summary>
-            \`\`\`terraform\n${{ steps.plan.outputs.stdout }}\`\`\`
+            \`${{ steps.plan.outputs.stdout }}\`
             </details>`;
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: output
+              body: `## Terraform checks in directory '${{ matrix.directory }}'\n` + output
             })
 
 

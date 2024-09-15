@@ -12,11 +12,6 @@ on:
       - main
     paths:
       - terraform/main/*
-  pull_request:
-    branches:
-      - main
-    paths:
-      - terraform/main/*
 
 env:
   TF_VERSION: 1.6.3
@@ -90,31 +85,6 @@ jobs:
         working-directory: ${{ matrix.dir }}
         continue-on-error: true
 
-      - name: Comment
-        if: steps.diff.outputs.diff
-        uses: actions/github-script@v7
-        env:
-          PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
-        with:
-          github-token: ${{ secrets.OKMTDEV_GITHUB_TOKEN }}
-          script: |
-            const output = `## \`${{ matrix.dir }}\`
-            #### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
-            #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
-
-            <details><summary>Show Plan</summary>
-
-            \`\`\`${process.env.PLAN}\`\`\`
-
-            </details>`;
-
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: output
-            })
-
       - name: Terraform apply
-        if: ${{ github.event_name == 'push'}}
+        if: steps.diff.outputs.diff
         run: terraform apply -auto-approve -no-color

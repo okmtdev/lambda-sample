@@ -18,6 +18,7 @@ func lambdaHandler(ctx context.Context, req events.APIGatewayProxyRequest) (even
 	log.Println("This is lambdaHandler")
 	e := echo.New()
 	e.GET("/", hello)
+	e.GET("/health", health)
 	echoLambda = echoadapter.New(e)
 
 	return echoLambda.ProxyWithContext(ctx, req)
@@ -27,11 +28,16 @@ func localHandler() {
 	log.Println("This is localHandler")
 	e := echo.New()
 	e.GET("/", hello)
+	e.GET("/health", health)
 	e.Logger.Fatal(e.Start(":1323"))
 }
 
 func hello(c echo.Context) error {
 	return c.String(http.StatusOK, "Hello, World!")
+}
+
+func health(c echo.Context) error {
+	return c.String(http.StatusOK, "OK")
 }
 
 func main() {

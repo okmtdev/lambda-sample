@@ -11,6 +11,12 @@ async def health():
     return "ok"
 
 
+@_app.get("/peco", include_in_schema=True)
+async def peco():
+    print("Called")
+    return "ok"
+
+
 app = CORSMiddleware(
     app=_app,
     allow_origins=["*"],
@@ -19,5 +25,4 @@ app = CORSMiddleware(
     allow_headers=["*"],
 )
 
-# これだけ
 handler = Mangum(app, lifespan="off")

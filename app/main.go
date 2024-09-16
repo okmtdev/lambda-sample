@@ -27,7 +27,6 @@ func localHandler() {
 	log.Println("This is localHandler")
 	e := echo.New()
 	e.GET("/", hello)
-	e.GET("/health", health)
 	e.Logger.Fatal(e.Start(":1323"))
 }
 

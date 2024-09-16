@@ -1,4 +1,4 @@
-name: pipeline for lambda-sample terraform apply
+name: Apply pipeline for lambda-sample terraform
 
 on:
   workflow_dispatch:

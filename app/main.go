@@ -25,14 +25,32 @@ func init() {
 
 func lambdaHandler(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	log.Println("This is lambdaHandler")
+
+	// Parse the path from the request body
+	var requestBody map[string]string
+	err := json.Unmarshal([]byte(req.Body), &requestBody)
+	if err != nil {
+		return events.APIGatewayProxyResponse{StatusCode: http.StatusBadRequest}, err
+	}
+	path, ok := requestBody["path"]
+	if !ok {
+		return events.APIGatewayProxyResponse{StatusCode: http.StatusBadRequest}, errors.New("path not specified")
+	}
+
+	// Set the path in the request
+	req.Path = path
+
 	return echoLambda.ProxyWithContext(ctx, req)
 }
 
+
+//func lambdaHandler(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+//	log.Println("This is lambdaHandler")
+//	return echoLambda.ProxyWithContext(ctx, req)
+//}
+
 func localHandler() {
 	log.Println("This is localHandler")
-	e := echo.New()
-	e.GET("/", hello)
-	e.GET("/health", health)
 	e.Logger.Fatal(e.Start(":1323"))
 }
 

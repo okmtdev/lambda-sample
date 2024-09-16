@@ -42,10 +42,7 @@ jobs:
           ECR_REPOSITORY: lambda-sample-ecr
           IMAGE_TAG: latest
         run: |
-          cp go.mod ./docker/go-lambda
-          cp go.sum ./docker/go-lambda
-          cp app/main.go ./docker/go-lambda
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./docker/go-lambda
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./docker/python-lambda
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
       - name: Update Lambda to use new image

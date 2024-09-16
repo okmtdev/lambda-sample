@@ -5,38 +5,67 @@ module "ecr" {
 
 resource "aws_lambda_function" "function" {
   function_name = "lambda-sample-function"
-  role          = aws_iam_role.lambda-sample-role.arn
-  image_uri     = "${module.ecr.repository.repository_url}:latest"
+  role          = aws_iam_role.api.arn
   package_type  = "Image"
+  memory_size   = "512"
+  timeout       = "60"
+  image_uri     = "${module.ecr.repository.repository_url}:latest"
 
   timeouts {
     create = "15m"
   }
+
+  depends_on = [ecr]
 }
 
 resource "aws_lambda_function_url" "function-url" {
   function_name      = aws_lambda_function.function.function_name
   authorization_type = "NONE"
+  cors {
+    allow_credentials = false
+    allow_headers = [
+      "*",
+    ]
+    allow_methods = [
+      "*",
+    ]
+    allow_origins = [
+      "*",
+    ]
+    expose_headers = [
+      "*",
+    ]
+    max_age = 0
+  }
 }
 
-resource "aws_iam_role" "lambda-sample-role" {
-  name = "lambda-sample-role"
+resource "aws_iam_role" "api" {
+  name                 = "lambda_minimum_serverless_api_role"
+  description          = "Allows api of lambda to call AWS services."
+  assume_role_policy   = data.aws_iam_policy_document.api_assume_policy.json
+  max_session_duration = "3600"
+}
 
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": "lambda.amazonaws.com"
-      },
-      "Effect": "Allow",
-      "Sid": ""
+
+data "aws_iam_policy_document" "api_assume_policy" {
+  statement {
+    actions = ["sts:AssumeRole"]
+    effect  = "Allow"
+    principals {
+      identifiers = [
+        "lambda.amazonaws.com"
+      ]
+      type = "Service"
     }
-  ]
+  }
 }
-EOF
+
+resource "aws_lambda_permission" "api_url" {
+  statement_id           = "FunctionURLAllowPublicAccess"
+  action                 = "lambda:InvokeFunctionUrl"
+  function_name          = aws_lambda_function.function.arn
+  function_url_auth_type = "NONE"
+  principal              = "*"
 }
 
 resource "aws_iam_role_policy_attachment" "lambda" {

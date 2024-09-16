@@ -9,6 +9,7 @@ resource "aws_lambda_function" "function" {
   function_name = "lambda-sample-function"
   role          = aws_iam_role.lambda.arn
   image_uri     = "${module.ecr.repository.repository_url}:latest"
+  package_type  = "Image"
 
   timeouts {
     create = "15m"

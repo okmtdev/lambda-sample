@@ -15,8 +15,8 @@ import (
 var echoLambda *echoadapter.EchoLambda
 
 func setRouter(e *echo.Echo, ctx context.Context) {
-	e.GET("/", hello)
 	e.GET("/health", health)
+	e.GET("/hello", hello)
 	e.Any("/*", unknownRouteHandler)
 }
 

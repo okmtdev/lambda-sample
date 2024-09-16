@@ -2,13 +2,15 @@ package main
 
 import (
 	"context"
+	"log"
+	"net/http"
+	"os"
+
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	echoadapter "github.com/awslabs/aws-lambda-go-api-proxy/echo"
 	"github.com/labstack/echo/v4"
-	"log"
-	"net/http"
-	"os"
+
 )
 
 var (
@@ -16,15 +18,17 @@ var (
 	e          *echo.Echo
 )
 
-func init() {
-	e = echo.New()
+func setRouter(e *echo.Echo, ctx context.Context) {
 	e.GET("/", hello)
 	e.GET("/health", health)
-	echoLambda = echoadapter.New(e)
 }
+
 
 func lambdaHandler(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	log.Println("This is lambdaHandler")
+	e = echo.New()
+	echoLambda = echoadapter.New(e)
+	setRouter(e, ctx)
 
 	apiGatewayReq := events.APIGatewayProxyRequest{
 		HTTPMethod:            req.HTTPMethod,
@@ -55,6 +59,9 @@ func lambdaHandler(ctx context.Context, req events.APIGatewayProxyRequest) (even
 
 func localHandler() {
 	log.Println("This is localHandler")
+	e = echo.New()
+	echoLambda = echoadapter.New(e)
+	setRouter(e, ctx)
 	e.Logger.Fatal(e.Start(":1323"))
 }
 

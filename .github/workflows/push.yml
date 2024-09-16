@@ -7,7 +7,7 @@ on:
       - main
     paths:
       - app/*
-      - docker/go-lambda/*
+      - docker/python-lambda/*
 
 env:
   TF_VERSION: 1.6.3

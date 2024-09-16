@@ -61,7 +61,7 @@ data "aws_iam_policy_document" "api_assume_policy" {
 }
 
 resource "aws_lambda_permission" "api_url" {
-  statement_id           = "FunctionURLAllowPublicAccess"
+  statement_id           = "FunctionURLAllowPublicAccess-1"
   action                 = "lambda:InvokeFunctionUrl"
   function_name          = aws_lambda_function.function.arn
   function_url_auth_type = "NONE"

@@ -10,19 +10,14 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 	echoadapter "github.com/awslabs/aws-lambda-go-api-proxy/echo"
 	"github.com/labstack/echo/v4"
-
 )
 
-var (
-	echoLambda *echoadapter.EchoLambda
-	e          *echo.Echo
-)
+var echoLambda *echoadapter.EchoLambda
 
 func setRouter(e *echo.Echo, ctx context.Context) {
 	e.GET("/", hello)
 	e.GET("/health", health)
 }
-
 
 // @title Lambda Sample
 // @version 0.0.1
@@ -55,7 +50,6 @@ func lambdaHandler(ctx context.Context, req events.APIGatewayProxyRequest) (even
 
 	return echoLambda.ProxyWithContext(ctx, apiGatewayReq)
 }
-
 
 //func lambdaHandler(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 //	log.Println("This is lambdaHandler")

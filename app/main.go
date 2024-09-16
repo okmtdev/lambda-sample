@@ -61,7 +61,7 @@ func localHandler() {
 	log.Println("This is localHandler")
 	e = echo.New()
 	echoLambda = echoadapter.New(e)
-	setRouter(e, ctx)
+	setRouter(e, nil)
 	e.Logger.Fatal(e.Start(":1323"))
 }
 

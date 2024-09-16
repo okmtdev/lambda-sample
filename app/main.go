@@ -28,21 +28,25 @@ func init() {
 func lambdaHandler(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	log.Println("This is lambdaHandler")
 
-	// Parse the path from the request body
-	var requestBody map[string]string
-	err := json.Unmarshal([]byte(req.Body), &requestBody)
-	if err != nil {
-		return events.APIGatewayProxyResponse{StatusCode: http.StatusBadRequest}, err
-	}
-	path, ok := requestBody["path"]
-	if !ok {
-		return events.APIGatewayProxyResponse{StatusCode: http.StatusBadRequest}, errors.New("path not specified")
+	apiGatewayReq := events.APIGatewayProxyRequest{
+		HTTPMethod:            req.RequestContext.HTTP.Method,
+		Path:                  req.RawPath,
+		Headers:               req.Headers,
+		Body:                  req.Body,
+		QueryStringParameters: req.QueryStringParameters,
+		RequestContext: events.APIGatewayProxyRequestContext{
+			AccountID:        req.RequestContext.AccountID,
+			RequestID:        req.RequestContext.RequestID,
+			APIID:            req.RequestContext.APIID,
+			DomainName:       req.RequestContext.DomainName,
+			DomainPrefix:     req.RequestContext.DomainPrefix,
+			RequestTimeEpoch: req.RequestContext.TimeEpoch,
+		},
 	}
 
-	// Set the path in the request
-	req.Path = path
+	log.Println("This is lambdaHander apiGatewayReq")
 
-	return echoLambda.ProxyWithContext(ctx, req)
+	return echoLambda.ProxyWithContext(ctx, apiGatewayReq)
 }
 
 

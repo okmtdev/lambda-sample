@@ -11,15 +11,20 @@ import (
 	"os"
 )
 
-var echoLambda *echoadapter.EchoLambda
+var (
+	echoLambda *echoadapter.EchoLambda
+	e          *echo.Echo
+)
 
-func lambdaHandler(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	log.Println("This is lambdaHandler")
-	e := echo.New()
+func init() {
+	e = echo.New()
 	e.GET("/", hello)
 	e.GET("/health", health)
 	echoLambda = echoadapter.New(e)
+}
 
+func lambdaHandler(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	log.Println("This is lambdaHandler")
 	return echoLambda.ProxyWithContext(ctx, req)
 }
 

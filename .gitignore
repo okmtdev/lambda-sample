@@ -31,3 +31,5 @@ go.work
 
 # DynamoDB local
 dynamodb_data
+
+.DS_Store

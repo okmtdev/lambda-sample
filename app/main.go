@@ -2,8 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/json"
-	"errors"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	echoadapter "github.com/awslabs/aws-lambda-go-api-proxy/echo"
@@ -29,8 +27,8 @@ func lambdaHandler(ctx context.Context, req events.APIGatewayProxyRequest) (even
 	log.Println("This is lambdaHandler")
 
 	apiGatewayReq := events.APIGatewayProxyRequest{
-		HTTPMethod:            req.RequestContext.HTTP.Method,
-		Path:                  req.RawPath,
+		HTTPMethod:            req.HTTPMethod,
+		Path:                  req.Path,
 		Headers:               req.Headers,
 		Body:                  req.Body,
 		QueryStringParameters: req.QueryStringParameters,
@@ -40,7 +38,7 @@ func lambdaHandler(ctx context.Context, req events.APIGatewayProxyRequest) (even
 			APIID:            req.RequestContext.APIID,
 			DomainName:       req.RequestContext.DomainName,
 			DomainPrefix:     req.RequestContext.DomainPrefix,
-			RequestTimeEpoch: req.RequestContext.TimeEpoch,
+			RequestTimeEpoch: req.RequestContext.RequestTimeEpoch,
 		},
 	}
 

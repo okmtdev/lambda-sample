@@ -7,7 +7,7 @@ on:
       - main
     paths:
       - app/*
-      - docker/go-local/*
+      - docker/go-lambda/*
 
 env:
   TF_VERSION: 1.6.3
@@ -41,5 +41,5 @@ jobs:
           ECR_REPOSITORY: lambda-sample-ecr
           IMAGE_TAG: latest
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./docker/go-local
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./docker/go-lambda
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG

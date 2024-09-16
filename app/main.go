@@ -29,7 +29,7 @@ func setRouter(e *echo.Echo, ctx context.Context) {
 // @host https://localhost:1323/
 // @BasePath /
 func lambdaHandler(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	log.Println("This is lambdaHandler")
+	log.Println("This is lambdaHandler 001")
 
 	e = echo.New()
 	echoLambda = echoadapter.New(e)

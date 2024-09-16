@@ -3,8 +3,6 @@ module "ecr" {
   name   = "lambda-sample-ecr"
 }
 
-data "aws_caller_identity" "current" {}
-
 resource "aws_lambda_function" "function" {
   function_name = "lambda-sample-function"
   role          = aws_iam_role.lambda-sample-role.arn

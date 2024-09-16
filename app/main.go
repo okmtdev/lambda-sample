@@ -19,13 +19,18 @@ var (
 )
 
 func setRouter(e *echo.Echo, ctx context.Context) {
-	e.GET("/", hello)
+	//e.GET("/", hello)
 	e.GET("/health", health)
 }
 
 
+// @title Lambda Sample
+// @version 0.0.1
+// @host https://localhost:1323/
+// @BasePath /
 func lambdaHandler(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	log.Println("This is lambdaHandler")
+
 	e = echo.New()
 	echoLambda = echoadapter.New(e)
 	setRouter(e, ctx)

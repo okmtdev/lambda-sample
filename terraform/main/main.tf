@@ -7,7 +7,7 @@ data "aws_caller_identity" "current" {}
 
 resource "aws_lambda_function" "function" {
   function_name = "lambda-sample-function"
-  role          = aws_iam_role.lambda.arn
+  role          = aws_iam_role.lambda-sample-role.arn
   image_uri     = "${module.ecr.repository.repository_url}:latest"
   package_type  = "Image"
 
@@ -16,7 +16,7 @@ resource "aws_lambda_function" "function" {
   }
 }
 
-resource "aws_iam_role" "lambda" {
+resource "aws_iam_role" "lambda-sample-role" {
   name = "lambda-sample-role"
 
   assume_role_policy = <<EOF
@@ -37,6 +37,6 @@ EOF
 }
 
 resource "aws_iam_role_policy_attachment" "lambda" {
-  role       = aws_iam_role.lambda.name
+  role       = aws_iam_role.lambda-sample-role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }

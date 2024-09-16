@@ -41,5 +41,8 @@ jobs:
           ECR_REPOSITORY: lambda-sample-ecr
           IMAGE_TAG: latest
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f ./docker/go-lambda/Dockerfile
+          cp go.mod ./docker/go-lambda
+          cp go.sum ./docker/go-lambda
+          cp app/main.go ./docker/go-lambda
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./docker/go-lambda
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG

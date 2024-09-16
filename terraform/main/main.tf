@@ -16,7 +16,7 @@ resource "aws_lambda_function" "function" {
   }
 }
 
-resource "aws_iam_role" "lambda" {
+resource "aws_iam_role" "lambda-sample-role" {
   name = "lambda-sample-role"
 
   assume_role_policy = <<EOF

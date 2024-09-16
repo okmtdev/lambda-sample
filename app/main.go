@@ -19,7 +19,7 @@ var (
 )
 
 func setRouter(e *echo.Echo, ctx context.Context) {
-	//e.GET("/", hello)
+	e.GET("/", hello)
 	e.GET("/health", health)
 }
 

@@ -8,6 +8,10 @@ on:
     paths:
       - app/*
 
+env:
+  TF_VERSION: 1.6.3
+  AWS_REGION: ap-northeast-1
+
 jobs:
   push:
     name: push
@@ -23,6 +27,8 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
+        env:
+          AWS_REGION: ${{ env.AWS_REGION }}
 
       - name: Build, tag, and push image to Amazon ECR
         id: build-image

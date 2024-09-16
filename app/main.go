@@ -17,6 +17,7 @@ var echoLambda *echoadapter.EchoLambda
 func setRouter(e *echo.Echo, ctx context.Context) {
 	e.GET("/", hello)
 	e.GET("/health", health)
+	e.Any("/*", unknownRouteHandler)
 }
 
 // @title Lambda Sample
@@ -70,6 +71,10 @@ func hello(c echo.Context) error {
 
 func health(c echo.Context) error {
 	return c.String(http.StatusOK, "OK")
+}
+
+func unknownRouteHandler(c echo.Context) error {
+	return c.String(http.StatusNotFound, "Route not found")
 }
 
 func main() {

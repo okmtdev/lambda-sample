@@ -1,4 +1,4 @@
-name: pipeline for lambda-sample terraform destory
+name: Destroy pipeline for lambda-sample terraform
 
 on:
   push:

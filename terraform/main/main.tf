@@ -85,16 +85,22 @@ resource "aws_apigatewayv2_integration" "integration" {
   integration_uri  = aws_lambda_function.function.invoke_arn
 }
 
-resource "aws_apigatewayv2_route" "route_health" {
-  api_id    = aws_apigatewayv2_api.api.id
-  route_key = "ANY /health"
-  target    = "integrations/${aws_apigatewayv2_integration.integration.id}"
-}
+//resource "aws_apigatewayv2_route" "route_health" {
+//  api_id    = aws_apigatewayv2_api.api.id
+//  route_key = "ANY /health"
+//  target    = "integrations/${aws_apigatewayv2_integration.integration.id}"
+//}
+//
+//
+//resource "aws_apigatewayv2_route" "route_peco" {
+//  api_id    = aws_apigatewayv2_api.api.id
+//  route_key = "GET /peco"
+//  target    = "integrations/${aws_apigatewayv2_integration.integration.id}"
+//}
 
-
-resource "aws_apigatewayv2_route" "route_peco" {
+resource "aws_apigatewayv2_route" "route_all" {
   api_id    = aws_apigatewayv2_api.api.id
-  route_key = "GET /peco"
+  route_key = "ANY /{proxy+}"
   target    = "integrations/${aws_apigatewayv2_integration.integration.id}"
 }
 

@@ -15,7 +15,7 @@ resource "aws_lambda_function" "function" {
     create = "15m"
   }
 
-  depends_on = [ecr]
+  depends_on = [module.ecr]
 }
 
 resource "aws_lambda_function_url" "function-url" {
